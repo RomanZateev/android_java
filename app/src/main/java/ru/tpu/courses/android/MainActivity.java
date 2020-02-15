@@ -81,7 +81,5 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.lab2).setOnClickListener((v) -> startActivity(Lab2Activity.newIntent(this)));
         findViewById(R.id.lab3).setOnClickListener((v) -> startActivity(Lab3Activity.newIntent(this)));
         findViewById(R.id.lab4).setOnClickListener((v) -> startActivity(Lab4Activity.newIntent(this)));
-        findViewById(R.id.lab5).setOnClickListener((v) -> { });
-        findViewById(R.id.lab6).setOnClickListener((v) -> { });
     }
 }
