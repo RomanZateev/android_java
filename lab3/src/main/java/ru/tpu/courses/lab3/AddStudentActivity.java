@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,13 +41,6 @@ public class AddStudentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lab3_activity_add_student);
 
-        /*
-        Метод getSupportActionBar() возвращает ActionBar (полоска сверху с элементами навигации и
-        заголовком). Метод setDisplayHomeAsUpEnabled позволяет добавить кнопку назад к ActionBar-у.
-        Когда необходимо сильно закастомизировать ActionBar, можно воспользоваться Toolbar-ом, либо
-        вообще реализовать View самому. Классы ActionBar и Toolbar позволяют реализовать большинство
-        стандартных поведений соответственно design guidelines от Google.
-         */
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         firstName = findViewById(R.id.first_name);
@@ -58,19 +49,12 @@ public class AddStudentActivity extends AppCompatActivity {
         groupNumber = findViewById(R.id.group_number);
     }
 
-    /**
-     * Переопределив этот метод мы можем добавить действия в меню ActionBar-а. Это иконки справа.
-     * Задаются они обычно через XML в ресурсах типа menu и инфлейтятся по аналогии с View.
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.lab3_add_student, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    /**
-     * Этот метод вызывается когда пользователь нажимает на любую из созданных ранее меню.
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Если пользователь нажал "назад", то просто закрываем Activity
