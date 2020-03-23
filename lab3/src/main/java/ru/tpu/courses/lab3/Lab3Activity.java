@@ -1,10 +1,14 @@
 package ru.tpu.courses.lab3;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,10 +55,11 @@ public class Lab3Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle(getString(R.string.lab3_title, getClass().getSimpleName()));
+        setTitle(getString(R.string.lab3_students));
 
         setContentView(R.layout.lab3_activity);
         list = findViewById(android.R.id.list);
+
         fab = findViewById(R.id.fab);
 
         /*
@@ -68,15 +73,16 @@ public class Lab3Activity extends AppCompatActivity {
          */
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
-
         /*
         Следующий ключевой компонент - это RecyclerView.Adapter. В нём описывается вся информация,
         необходимая для заполнения RecyclerView. В примере мы выводим пронумерованный список
         студентов, подробнее о работе адаптера в документации к классу StudentsAdapter.
          */
-        list.setAdapter(studentsAdapter = new StudentsAdapter());
-        studentsAdapter.setStudents(studentsCache.getStudents());
 
+        list.setAdapter(studentsAdapter = new StudentsAdapter());
+//        studentsAdapter.setStudents(studentsCache.getStudents());
+
+        studentsAdapter.setStudents(studentsCache.getStudents());
         /*
         При нажатии на кнопку мы переходим на Activity для добавления студента. Обратите внимание,
         что здесь используется метод startActivityForResult. Этот метод позволяет организовывать
@@ -91,6 +97,8 @@ public class Lab3Activity extends AppCompatActivity {
                 )
         );
     }
+
+
 
     /**
      * Этот метод вызывается после того, как мы ушли с запущенной с помощью метода
@@ -113,8 +121,57 @@ public class Lab3Activity extends AppCompatActivity {
             studentsCache.addStudent(student);
 
             studentsAdapter.setStudents(studentsCache.getStudents());
-            studentsAdapter.notifyItemRangeInserted(studentsAdapter.getItemCount() - 2, 2);
+//            studentsAdapter.setStudents(studentsCache.getStudents());
+//            studentsAdapter.notifyItemRangeInserted(studentsAdapter.getItemCount() - 2, 2);
+            //studentsAdapter.notifyItemRangeInserted(studentsAdapter.getItemCount() - 1, 1);
+            studentsAdapter.notifyDataSetChanged();
             list.scrollToPosition(studentsAdapter.getItemCount() - 1);
         }
+    }
+    /**
+     * Этот метод вызывается когда пользователь нажимает на любую из созданных ранее меню.
+     */
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Если пользователь нажал "Фильтр"
+        if (item.getItemId() == R.id.action_filter) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(R.string.lab3_filter)
+                    .setPositiveButton(R.string.lab3_filter_group, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            studentsAdapter.categoryType("groupNumber");
+                            studentsAdapter.notifyDataSetChanged();
+                            setTitle(getString(R.string.lab3_groups));
+                        }
+                    })
+                    .setNegativeButton(R.string.lab3_filter_sex, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            studentsAdapter.categoryType("sex");
+                            studentsAdapter.notifyDataSetChanged();
+                            setTitle(getString(R.string.lab3_sexes));
+                        }
+                    })
+                    .setNeutralButton(R.string.lab3_filter_cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            studentsAdapter.categoryType("no");
+                            studentsAdapter.notifyDataSetChanged();
+                            setTitle(getString(R.string.lab3_students));
+                        }
+                    });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.lab3_filter_students, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

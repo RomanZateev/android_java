@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.core.util.ObjectsCompat;
 
+import java.util.Objects;
+
 /**
  * Для передачи самописных объектов через {@link android.content.Intent} или
  * {@link android.os.Bundle}, необходимо реализовать интерфейс {@link Parcelable}. В нём описывается
@@ -19,17 +21,25 @@ public class Student implements Parcelable {
 	public String secondName;
 	@NonNull
 	public String lastName;
+	@NonNull
+	public String groupNumber;
+	@NonNull
+	public String sex;
 
-	public Student(@NonNull String firstName, @NonNull String secondName, @NonNull String lastName) {
+	public Student(@NonNull String firstName, @NonNull String secondName, @NonNull String lastName, @NonNull String groupNumber, @NonNull String sex) {
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.secondName = secondName;
+		this.groupNumber = groupNumber;
+		this.sex = sex;
 	}
 
-	protected Student(Parcel in) {
-		firstName = in.readString();
-		lastName = in.readString();
-		secondName = in.readString();
+	private Student(Parcel in) {
+		firstName = Objects.requireNonNull(in.readString());
+		lastName = Objects.requireNonNull(in.readString());
+		secondName = Objects.requireNonNull(in.readString());
+		groupNumber = Objects.requireNonNull(in.readString());
+		sex = Objects.requireNonNull(in.readString());
 	}
 
 	public static final Creator<Student> CREATOR = new Creator<Student>() {
@@ -54,6 +64,8 @@ public class Student implements Parcelable {
 		dest.writeString(firstName);
 		dest.writeString(lastName);
 		dest.writeString(secondName);
+		dest.writeString(groupNumber);
+		dest.writeString(sex);
 	}
 
 	@Override
@@ -63,11 +75,13 @@ public class Student implements Parcelable {
 		Student student = (Student) o;
 		return lastName.equals(student.lastName) &&
 				firstName.equals(student.firstName) &&
-				secondName.equals(student.secondName);
+				secondName.equals(student.secondName)&&
+				groupNumber.equals(student.groupNumber)&&
+				sex.equals(student.sex);
 	}
 
 	@Override
 	public int hashCode() {
-		return ObjectsCompat.hash(lastName, firstName, secondName);
+		return ObjectsCompat.hash(lastName, firstName, secondName, groupNumber, sex);
 	}
 }
