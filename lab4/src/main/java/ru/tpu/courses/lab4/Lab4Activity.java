@@ -51,7 +51,7 @@ public class Lab4Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         /*
-        Получаем объект для выполнения запросов к БД. См. Lab4Database.
+        Получаем объект для выполнения запросов к БД. См. Lab4Database.s
          */
         studentDao = Lab4Database.getInstance(this).studentDao();
 

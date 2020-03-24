@@ -104,7 +104,6 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setStudents(List<Student> students) {
         this.students = students;
-        categoryType("no");
     }
 
     // сворачивание и разворачивание категории
