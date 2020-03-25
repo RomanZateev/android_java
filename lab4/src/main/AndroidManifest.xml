@@ -8,17 +8,6 @@
 
 	<application>
 		<activity android:name=".Lab4Activity" />
-		<activity android:name=".add.AddStudentActivity" />
-
-		<provider
-			android:name="androidx.core.content.FileProvider"
-			android:authorities="ru.tpu.courses.lab4.fileprovider"
-			android:exported="false"
-			android:grantUriPermissions="true">
-			<meta-data
-				android:name="android.support.FILE_PROVIDER_PATHS"
-				android:resource="@xml/lab4_photo_path"
-				/>
-		</provider>
+		<activity android:name=".AddStudentActivity" />
 	</application>
 </manifest>

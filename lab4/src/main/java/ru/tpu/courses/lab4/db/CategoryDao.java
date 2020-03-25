@@ -15,10 +15,27 @@ import java.util.List;
  * https://developer.android.com/training/data-storage/room/accessing-data.html
  */
 @Dao
-public interface StudentDao {
-    @Query("SELECT * FROM student")
-    List<Student> getAll();
+public interface CategoryDao {
+    @Query("SELECT * FROM categorytodb")
+    List<CategoryToDB> getAll();
 
     @Insert
-    void insert(@NonNull Student student);
+    void insert(@NonNull CategoryToDB categoryToDB);
+
+    @Query(
+            "SELECT COUNT(*) FROM categorytodb WHERE " +
+                    "category_name = :categoryName"
+    )
+    int expand(@NonNull String categoryName);
+
+    @Query(
+            "DELETE FROM categorytodb WHERE " +
+                    "category_name = :categoryName"
+    )
+    void delete(@NonNull String categoryName);
+
+    @Query(
+            "DELETE FROM categorytodb"
+    )
+    void deleteAll();
 }
