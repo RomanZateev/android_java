@@ -1,9 +1,7 @@
 package ru.tpu.courses.lab3;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ru.tpu.courses.lab3.adapter.StudentsAdapter;
-import android.content.SharedPreferences.Editor;
 
 public class Lab3Activity extends AppCompatActivity {
 
@@ -30,7 +27,6 @@ public class Lab3Activity extends AppCompatActivity {
     private final StudentsCache studentsCache = StudentsCache.getInstance();
 
     private RecyclerView list;
-    private FloatingActionButton fab;
 
     private StudentsAdapter studentsAdapter;
 
@@ -45,14 +41,12 @@ public class Lab3Activity extends AppCompatActivity {
         setContentView(R.layout.lab3_activity);
         list = findViewById(android.R.id.list);
 
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
 
         list.setAdapter(studentsAdapter = new StudentsAdapter());
-
-        loadCategory();
 
         studentsAdapter.setStudents(studentsCache.getStudents());
 
@@ -82,38 +76,31 @@ public class Lab3Activity extends AppCompatActivity {
         }
     }
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Если пользователь нажал "Фильтр"
         if (item.getItemId() == R.id.action_filter) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setMessage(R.string.lab3_filter)
-                    .setPositiveButton(R.string.lab3_filter_group, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            studentsAdapter.categoryType("groupNumber");
-                            studentsAdapter.notifyDataSetChanged();
-                            setTitle(getString(R.string.lab3_groups));
+                    .setPositiveButton(R.string.lab3_filter_group, (dialog, id) -> {
+                        studentsAdapter.categoryType("groupNumber");
+                        studentsAdapter.notifyDataSetChanged();
+                        setTitle(getString(R.string.lab3_groups));
 
-                            categoryName = "groupNumber";
-                        }
+                        categoryName = "groupNumber";
                     })
-                    .setNegativeButton(R.string.lab3_filter_sex, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            studentsAdapter.categoryType("sex");
-                            studentsAdapter.notifyDataSetChanged();
-                            setTitle(getString(R.string.lab3_sexes));
+                    .setNegativeButton(R.string.lab3_filter_sex, (dialog, id) -> {
+                        studentsAdapter.categoryType("sex");
+                        studentsAdapter.notifyDataSetChanged();
+                        setTitle(getString(R.string.lab3_sexes));
 
-                            categoryName = "sex";
-                        }
+                        categoryName = "sex";
                     })
-                    .setNeutralButton(R.string.lab3_filter_cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            studentsAdapter.categoryType("no");
-                            studentsAdapter.notifyDataSetChanged();
-                            setTitle(getString(R.string.lab3_students));
+                    .setNeutralButton(R.string.lab3_filter_cancel, (dialog, id) -> {
+                        studentsAdapter.categoryType("no");
+                        studentsAdapter.notifyDataSetChanged();
+                        setTitle(getString(R.string.lab3_students));
 
-                            categoryName = "no";
-                        }
+                        categoryName = "no";
                     });
 
             AlertDialog dialog = builder.create();
@@ -129,26 +116,5 @@ public class Lab3Activity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.lab3_filter_students, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        saveCategory();
-    }
-
-    SharedPreferences sPref;
-    final String SAVED_CATEGORY = "saved_category";
-
-    void saveCategory() {
-        sPref = getPreferences(MODE_PRIVATE);
-        Editor ed = sPref.edit();
-        ed.putString(SAVED_CATEGORY, categoryName);
-        ed.apply();
-    }
-
-    void loadCategory() {
-        sPref = getPreferences(MODE_PRIVATE);
-        categoryName = sPref.getString(SAVED_CATEGORY, "");
     }
 }

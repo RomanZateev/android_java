@@ -10,9 +10,6 @@ public class Category {
 
     private List<Student> students;
 
-    public Category() {
-    }
-
     public Category(String categoryName, List<Student> students) {
         this.сategoryName = categoryName;
         this.students = students;

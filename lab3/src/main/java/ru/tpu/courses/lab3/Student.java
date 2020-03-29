@@ -8,11 +8,6 @@ import androidx.core.util.ObjectsCompat;
 
 import java.util.Objects;
 
-/**
- * Для передачи самописных объектов через {@link android.content.Intent} или
- * {@link android.os.Bundle}, необходимо реализовать интерфейс {@link Parcelable}. В нём описывается
- * как сохранить и восстановить объект используя примитивные свойства (String, int и т.д.).
- */
 public class Student implements Parcelable {
 
 	@NonNull

@@ -1,5 +1,6 @@
 package ru.tpu.courses.lab3.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -7,28 +8,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import ru.tpu.courses.lab3.Category;
 import ru.tpu.courses.lab3.Student;
 
 public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int TYPE_STUDENT = 1;
-    public static final int TYPE_CATEGORY = 2;
+    private static final int TYPE_STUDENT = 1;
+    private static final int TYPE_CATEGORY = 2;
 
-    private static List<Object> objects = new ArrayList<>();
+    private List<Object> objects = new ArrayList<>();
 
-    // массив студентов
-    private static List<Student> students = new ArrayList<>();
+    private List<Student> students = new ArrayList<>();
 
-    public void categoryType(String categoryType)
-    {
+    public void categoryType(String categoryType) {
         switch (categoryType) {
             case "no":
                 objects.clear();
-                for (Student student: students)
-                    objects.add(student);
+                objects.addAll(students);
                 break;
             case "sex":
                 SetStudentsToSexes(students);
@@ -44,8 +41,6 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
-//            case TYPE_NUMBER:
-//                return new NumberHolder(parent);
             case TYPE_CATEGORY:
                 return new CategoryHolder(parent);
             case TYPE_STUDENT:
@@ -54,6 +49,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         throw new IllegalArgumentException("unknown viewType = " + viewType);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
@@ -61,11 +57,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 CategoryHolder categoryHolder = (CategoryHolder) holder;
                 Category category = (Category) objects.get(position);
                 categoryHolder.categoryName.setText(category.сategoryName);
-
-                categoryHolder.itemView.setOnClickListener(v -> {
-
-                    onHeaderClicked(category);
-                });
+                categoryHolder.itemView.setOnClickListener(v -> onHeaderClicked(category));
                 break;
             case TYPE_STUDENT:
                 StudentHolder studentHolder = (StudentHolder) holder;
@@ -93,7 +85,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    protected Object getListItem(int position) {
+    private Object getListItem(int position) {
         boolean indexInRange = position >= 0 && position < objects.size();
         if (indexInRange) {
             return objects.get(position);
@@ -106,7 +98,6 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.students = students;
     }
 
-    // сворачивание и разворачивание категории
     private void onHeaderClicked(Category header) {
         int idx = objects.indexOf(header);
         if (header.isExpanded()) {
@@ -121,71 +112,68 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    private static List<Category> categories = new ArrayList<>();
+    private List<Category> categories = new ArrayList<>();
 
-    //создание категорий
-    private void SetStudentsToGroups(List<Student> students)
-    {
+    private void SetStudentsToGroups(List<Student> students) {
         List<String> studentCategoriesNames = new ArrayList<>();
 
-        for (Student student: students)
-            if (!studentCategoriesNames.contains(student.groupNumber))
+        for (Student student: students){
+            if (!studentCategoriesNames.contains(student.groupNumber)){
                 studentCategoriesNames.add(student.groupNumber);
+            }
+        }
 
         List<Category> studentCategories = new ArrayList<>();
-        for (String studentCategoryName: studentCategoriesNames)
-        {
+
+        for (String studentCategoryName: studentCategoriesNames) {
             List<Student> studentsInCategory = new ArrayList<>();
 
-            for (Student student: students)
-                if (studentCategoryName.equals(student.groupNumber))
+            for (Student student: students){
+                if (studentCategoryName.equals(student.groupNumber)){
                     studentsInCategory.add(student);
+                }
+            }
 
             studentCategories.add(new Category(studentCategoryName, studentsInCategory));
         }
-
         categories = studentCategories;
     }
 
-    // Создает полный список всех групп {@link Category} и студентов по порядку.
-    public void generateCategoryStudentItemList() {
-
+    private void generateCategoryStudentItemList() {
         objects.clear();
-
         objects = getFlatItemsList();
     }
 
-    public void generateSexStudentItemList()
-    {
+    private void generateSexStudentItemList() {
         objects.clear();
-
         objects = getFlatItemsList();
     }
 
-    private void SetStudentsToSexes(List<Student> students)
-    {
+    private void SetStudentsToSexes(List<Student> students) {
         List<String> studentCategoriesNames = new ArrayList<>();
 
-        for (Student student: students)
-            if (!studentCategoriesNames.contains(student.sex))
+        for (Student student: students){
+            if (!studentCategoriesNames.contains(student.sex)){
                 studentCategoriesNames.add(student.sex);
+            }
+        }
 
         List<Category> studentCategories = new ArrayList<>();
-        for (String studentCategoryName: studentCategoriesNames)
-        {
+
+        for (String studentCategoryName: studentCategoriesNames) {
             List<Student> studentsInCategory = new ArrayList<>();
 
-            for (Student student: students)
-                if (studentCategoryName.equals(student.sex))
+            for (Student student: students){
+                if (studentCategoryName.equals(student.sex)){
                     studentsInCategory.add(student);
+                }
+            }
 
             studentCategories.add(new Category(studentCategoryName, studentsInCategory));
         }
-
         categories = studentCategories;
     }
 
-    // преобразование в лист
     private List<Object> getFlatItemsList() {
         List<Object> items = new ArrayList<>();
         for (Category category : categories) {

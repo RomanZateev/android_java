@@ -11,7 +11,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        StudentsCache studentsCache = StudentsCache.getInstance();
-        studentsCache.addStudent(new Student("Roman", "Roman", "Roman", "8I6A", "Man"));
+//        StudentsCache studentsCache = StudentsCache.getInstance();
+//        studentsCache.addStudent(new Student("Roman", "Roman", "Roman", "8I6A", "Man"));
     }
 }
