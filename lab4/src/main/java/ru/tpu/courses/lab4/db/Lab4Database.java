@@ -44,7 +44,7 @@ public abstract class Lab4Database extends RoomDatabase {
                     db = Room.databaseBuilder(
                             context.getApplicationContext(),
                             Lab4Database.class,
-                            "lab_database"
+                            "database"
                     )
                             // Запросы к БД могут быть весьма медленными и вообще практически любое
                             // обращение к файловой системе рекомендуется выполнять отдельно от

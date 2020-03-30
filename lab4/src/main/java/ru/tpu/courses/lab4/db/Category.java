@@ -11,22 +11,10 @@ public class Category {
     @NonNull
     private boolean expanded  = false;
 
-    public Category() {
-    }
-
     public Category(String categoryName, List<Student> students) {
         this.сategoryName = categoryName;
         this.students = students;
         this.expanded = false;
-    }
-
-    public Category(String categoryName, boolean expanded) {
-        this.сategoryName = categoryName;
-        this.expanded = expanded;
-    }
-
-    public Category(String categoryName) {
-        this.сategoryName = categoryName;
     }
 
     public List<Student> students;
@@ -37,10 +25,6 @@ public class Category {
 
     public boolean isExpanded() {
         return expanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
     }
 
     public void expand() {

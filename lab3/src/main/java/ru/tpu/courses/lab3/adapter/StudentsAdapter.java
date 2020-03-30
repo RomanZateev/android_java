@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ru.tpu.courses.lab3.Category;
 import ru.tpu.courses.lab3.Student;
@@ -149,10 +150,31 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         objects = getFlatItemsList();
     }
 
+    private Student changeSexLanguage(Student student) {
+
+        if (Locale.getDefault().toString().equals("English")){
+            if (student.sex.equals("Мужской")){
+                student.sex = "Man";
+            } else if (student.sex.equals("Женский")){
+                student.sex = "Woman";
+            }
+        } else{
+            if (student.sex.equals("Man")){
+                student.sex = "Мужской";
+            } else if (student.sex.equals("Woman")){
+                student.sex = "Женский";
+            }
+        }
+        return student;
+    }
+
     private void SetStudentsToSexes(List<Student> students) {
         List<String> studentCategoriesNames = new ArrayList<>();
 
         for (Student student: students){
+
+            student = changeSexLanguage(student);
+
             if (!studentCategoriesNames.contains(student.sex)){
                 studentCategoriesNames.add(student.sex);
             }

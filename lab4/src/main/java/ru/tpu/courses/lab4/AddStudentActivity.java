@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Objects;
+
 import ru.tpu.courses.lab4.db.Student;
 
 /**
@@ -34,14 +36,13 @@ public class AddStudentActivity extends AppCompatActivity {
     private EditText secondName;
     private EditText lastName;
     private EditText groupNumber;
-    private String sex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lab3_activity_add_student);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         firstName = findViewById(R.id.first_name);
         secondName = findViewById(R.id.second_name);
@@ -65,8 +66,8 @@ public class AddStudentActivity extends AppCompatActivity {
         // Если пользователь нажал "Сохранить"
         if (item.getItemId() == R.id.action_save) {
 
-            Spinner spinner = (Spinner) findViewById(R.id.sex);
-            sex = spinner.getSelectedItem().toString();
+            Spinner spinner = findViewById(R.id.sex);
+            String sex = spinner.getSelectedItem().toString();
 
             // Создаём объект студента из введенных
             Student student = new Student(

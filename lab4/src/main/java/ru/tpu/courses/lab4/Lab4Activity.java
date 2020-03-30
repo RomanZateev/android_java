@@ -1,7 +1,6 @@
 package ru.tpu.courses.lab4;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -36,10 +35,7 @@ public class Lab4Activity extends AppCompatActivity {
     private StudentDao studentDao;
     private CategoryDao categoryDao;
     private RecyclerView list;
-    private FloatingActionButton fab;
-
     private StudentsAdapter studentsAdapter;
-
     private String categoryName = "no";
 
     public void clearCategories(){
@@ -59,7 +55,7 @@ public class Lab4Activity extends AppCompatActivity {
         setContentView(R.layout.lab3_activity);
         list = findViewById(android.R.id.list);
 
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
@@ -109,22 +105,18 @@ public class Lab4Activity extends AppCompatActivity {
                         categoryName = "groupNumber";
                         clearCategories();
                     })
-                    .setNegativeButton(R.string.lab3_filter_sex, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            studentsAdapter.categoryType("sex");
-                            studentsAdapter.notifyDataSetChanged();
-                            setTitle(getString(R.string.lab3_sexes));
-                            categoryName = "sex";
-                            clearCategories();
-                        }
+                    .setNegativeButton(R.string.lab3_filter_sex, (dialog, id) -> {
+                        studentsAdapter.categoryType("sex");
+                        studentsAdapter.notifyDataSetChanged();
+                        setTitle(getString(R.string.lab3_sexes));
+                        categoryName = "sex";
+                        clearCategories();
                     })
-                    .setNeutralButton(R.string.lab3_filter_cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            studentsAdapter.categoryType("no");
-                            studentsAdapter.notifyDataSetChanged();
-                            categoryName = "no";
-                            clearCategories();
-                        }
+                    .setNeutralButton(R.string.lab3_filter_cancel, (dialog, id) -> {
+                        studentsAdapter.categoryType("no");
+                        studentsAdapter.notifyDataSetChanged();
+                        categoryName = "no";
+                        clearCategories();
                     });
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -161,7 +153,8 @@ public class Lab4Activity extends AppCompatActivity {
         String loadedCategoryName = sPref.getString(SAVED_CATEGORY, "");
 
         assert loadedCategoryName != null;
-        if (!loadedCategoryName.equals(""))
+        if (!loadedCategoryName.equals("")){
             categoryName = loadedCategoryName;
+        }
     }
 }

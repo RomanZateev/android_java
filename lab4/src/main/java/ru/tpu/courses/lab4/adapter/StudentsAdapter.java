@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ru.tpu.courses.lab4.db.Category;
 import ru.tpu.courses.lab4.db.CategoryDao;
@@ -18,10 +19,10 @@ import ru.tpu.courses.lab4.db.Student;
 
 public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int TYPE_STUDENT = 1;
-    public static final int TYPE_CATEGORY = 2;
+    private static final int TYPE_STUDENT = 1;
+    private static final int TYPE_CATEGORY = 2;
 
-    private static List<Object> objects = new ArrayList<>();
+    private List<Object> objects = new ArrayList<>();
 
     private CategoryDao categoryDao;
 
@@ -29,15 +30,14 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.categoryDao = categoryDao;
     }
     // массив студентов
-    private static List<Student> students = new ArrayList<>();
+    private List<Student> students = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void categoryType(String categoryType) {
         switch (categoryType) {
             case "no":
                 objects.clear();
-                for (Student student: students)
-                    objects.add(student);
+                objects.addAll(students);
                 break;
             case "sex":
                 SetStudentsToSexes(students);
@@ -101,7 +101,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    protected Object getListItem(int position) {
+    private Object getListItem(int position) {
         boolean indexInRange = position >= 0 && position < objects.size();
         if (indexInRange) {
             return objects.get(position);
@@ -132,29 +132,33 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void saveExpanded(Category category) {
-        if (categoryDao.expand(category.сategoryName) == 0)
+        if (categoryDao.expand(category.сategoryName) == 0){
             categoryDao.insert(new CategoryToDB(category.сategoryName, category.isExpanded()));
-        else
+        } else{
             categoryDao.delete(category.сategoryName);
+        }
     }
 
-    private static List<Category> categories = new ArrayList<>();
+    private List<Category> categories = new ArrayList<>();
 
     //создание категорий
     private void SetStudentsToGroups(List<Student> students) {
         List<String> studentCategoriesNames = new ArrayList<>();
 
-        for (Student student: students)
-            if (!studentCategoriesNames.contains(student.groupNumber))
+        for (Student student: students){
+            if (!studentCategoriesNames.contains(student.groupNumber)){
                 studentCategoriesNames.add(student.groupNumber);
+            }
+        }
 
         List<Category> studentCategories = new ArrayList<>();
         for (String studentCategoryName: studentCategoriesNames) {
             List<Student> studentsInCategory = new ArrayList<>();
-
-            for (Student student: students)
-                if (studentCategoryName.equals(student.groupNumber))
+            for (Student student: students){
+                if (studentCategoryName.equals(student.groupNumber)){
                     studentsInCategory.add(student);
+                }
+            }
 
             studentCategories.add(new Category(studentCategoryName, studentsInCategory));
         }
@@ -163,39 +167,63 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     // Создает полный список всех групп {@link Category} и студентов по порядку.
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void generateCategoryStudentItemList() {
+    private void generateCategoryStudentItemList() {
         objects.clear();
         objects = getFlatItemsList();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void generateSexStudentItemList() {
+    private void generateSexStudentItemList() {
         objects.clear();
         objects = getFlatItemsList();
     }
 
+    private Student changeSexLanguage(Student student) {
+
+        if (Locale.getDefault().toString().equals("English")){
+            if (student.sex.equals("Мужской")){
+                student.sex = "Man";
+            } else if (student.sex.equals("Женский")){
+                student.sex = "Woman";
+            }
+        } else{
+            if (student.sex.equals("Man")){
+                student.sex = "Мужской";
+            } else if (student.sex.equals("Woman")){
+                student.sex = "Женский";
+            }
+        }
+        return student;
+    }
+
     private void SetStudentsToSexes(List<Student> students) {
+
         List<String> studentCategoriesNames = new ArrayList<>();
 
-        for (Student student: students)
-            if (!studentCategoriesNames.contains(student.sex))
+        for (Student student: students){
+
+            student = changeSexLanguage(student);
+
+            if (!studentCategoriesNames.contains(student.sex)){
                 studentCategoriesNames.add(student.sex);
+            }
+        }
 
         List<Category> studentCategories = new ArrayList<>();
         for (String studentCategoryName: studentCategoriesNames) {
             List<Student> studentsInCategory = new ArrayList<>();
-
-            for (Student student: students)
-                if (studentCategoryName.equals(student.sex))
+            for (Student student: students){
+                if (studentCategoryName.equals(student.sex)){
                     studentsInCategory.add(student);
+                }
+            }
 
             studentCategories.add(new Category(studentCategoryName, studentsInCategory));
         }
-
         categories = studentCategories;
     }
 
-    List<CategoryToDB> categoryToDBS = new ArrayList<>();
+    private List<CategoryToDB> categoryToDBS = new ArrayList<>();
 
     public void setCategoryToDBS(List<CategoryToDB> categoryToDBS) {
         this.categoryToDBS = categoryToDBS;
@@ -206,10 +234,9 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Object> getFlatItemsList() {
         List<Object> items = new ArrayList<>();
         for (Category category : categories) {
-
-            if (containsName(categoryDao.getAll(), category.сategoryName))
+            if (containsName(categoryDao.getAll(), category.сategoryName)){
                 category.expand();
-
+            }
             items.add(category);
             if (category.isExpanded()) {
                 items.addAll(category.getChildItemList());
@@ -219,7 +246,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public boolean containsName(final List<CategoryToDB> list, final String name){
+    private boolean containsName(final List<CategoryToDB> list, final String name){
         return list.stream().anyMatch(o -> o.getCategoryName().equals(name));
     }
 }
