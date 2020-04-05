@@ -11,5 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="10pt"
-        android:paddingStart="18dp" />
+        android:paddingStart="18dp"
+        android:paddingLeft="18dp" />
 </LinearLayout>
